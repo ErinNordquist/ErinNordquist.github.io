@@ -12308,7 +12308,7 @@ score: 0.288726695373
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>These graphs are all looking for a relationship between calories and other attributes of the dataset. You can guess that the greater the calories the more it probably has of anything. This assumption seems hold here, but there are some interesting things going on here (with sugar especially). These graphs also have a red line drawn on them. This line comes from a linear regression model created using sklearn's LinearRegression from their linear_model package. Let's look closer at the sugar situation by coloring the scatter point by category.</p>
+<p>These graphs are all looking for a relationship between calories and other attributes of the dataset. You can guess that the greater the calories the more it probably has of anything. This assumption seems hold here, but there are some interesting things going on here (with sugar especially). These graphs also have a red line drawn on them. This line comes from a linear regression model created using sklearn's LinearRegression from their linear_model package. This model is helping us to see what the average change in nutrient (y) vs a 1 calorie increase (x). The intercept, in this case, does not really provide any functional information because technically all the lines should intersect the point (0,0) because 0 calories indicates no food which has no nutrients. (Although it should be notes that some artificial sweeteners break this rule idea.) Let's look closer at the sugar situation by coloring the scatter point by category.</p>
 
 </div>
 </div>
@@ -12435,11 +12435,193 @@ score: 0.0367226383386
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Just as I was expecting, drinks, mccafe items, and desserts make up the top part of the sugar split. It appes that these categories as well as nuggests &amp; tenders, and maybe sandwiches fall into their own linear patterns independent of the rest of the graph. I decided to go ahead and calculate the linear regression models as I plotted the different categories.</p>
-<p>In score values for the new model provide far more information than the basic model did. Drinks, desserts, and mccafe now have scores above 0.8, an incredible improvement from less than 0.05. However not all of the category-specific models were quite as good. nuggests &amp; tenders, sides, and salads are still around the same score level, but this makes sense. McDonald's offers some healthier option like grilled chicken, but also offered barbeque sauce dipped chicken with loads more sugar, the same goes for salad dressings. Sides are a very diverse category in themselves so it's not surprising that they don't show a strong relationship between calories and sugar content.</p>
+<p>As you were probably expecting, drinks, mccafe items, and desserts make up the top part of the sugar split. It appes that these categories as well as nuggests &amp; tenders, and maybe sandwiches fall into their own linear patterns independent of the rest of the graph. I decided to go ahead and calculate the linear regression models as I plotted the different categories.</p>
+<p>In score values for the new model provide far more information than the basic model did. Drinks, desserts, and mccafe now have scores above 0.8, an incredible improvement from less than 0.05. However, not all of the category-specific models were quite as good. nuggests &amp; tenders, sides, and salads are still around the same score level, but this makes sense. McDonald's offers some healthier option like grilled chicken, but also offered barbeque sauce dipped chicken with loads more sugar, the same goes for salad dressings. Sides are a very diverse category in themselves so it's not surprising that they don't show a strong relationship between calories and sugar content.</p>
 
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">nutr_df</span><span class="p">[</span><span class="s1">&#39;cat_int&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nutr_df</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span>
+<span class="n">mapping</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">categories</span><span class="p">,</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">9</span><span class="p">)))</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">r</span> <span class="ow">in</span> <span class="n">nutr_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+    <span class="n">nutr_df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="s1">&#39;cat_int&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mapping</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">])</span>
+<span class="n">nutr_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[5]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Food</th>
+      <th>calories</th>
+      <th>calories_from_fat</th>
+      <th>tot_fat_g</th>
+      <th>sat_fat_g</th>
+      <th>trans_fat_g</th>
+      <th>cholesterol_mg</th>
+      <th>sodium_mg</th>
+      <th>carbs_g</th>
+      <th>fiber_g</th>
+      <th>sugar_g</th>
+      <th>protein_g</th>
+      <th>vitA_pdv</th>
+      <th>vitC_pdv</th>
+      <th>calcium_pdv</th>
+      <th>iron_pdv</th>
+      <th>category</th>
+      <th>cat_int</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Artisan Grilled Chicken Sandwich</td>
+      <td>380</td>
+      <td>60</td>
+      <td>7</td>
+      <td>2.0</td>
+      <td>0.0</td>
+      <td>95</td>
+      <td>1110</td>
+      <td>44</td>
+      <td>3</td>
+      <td>11</td>
+      <td>37</td>
+      <td>4.0</td>
+      <td>20.0</td>
+      <td>20.0</td>
+      <td>15.0</td>
+      <td>sandwich</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Single Bacon Smokehouse Burger</td>
+      <td>840</td>
+      <td>410</td>
+      <td>45</td>
+      <td>17.0</td>
+      <td>1.5</td>
+      <td>130</td>
+      <td>1580</td>
+      <td>62</td>
+      <td>2</td>
+      <td>18</td>
+      <td>46</td>
+      <td>6.0</td>
+      <td>20.0</td>
+      <td>20.0</td>
+      <td>30.0</td>
+      <td>sandwich</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Double Bacon Smokehouse Burger</td>
+      <td>1130</td>
+      <td>600</td>
+      <td>67</td>
+      <td>27.0</td>
+      <td>3.0</td>
+      <td>220</td>
+      <td>1920</td>
+      <td>63</td>
+      <td>3</td>
+      <td>18</td>
+      <td>70</td>
+      <td>10.0</td>
+      <td>20.0</td>
+      <td>50.0</td>
+      <td>40.0</td>
+      <td>sandwich</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Grilled Bacon Smokehouse Chicken Sandwich</td>
+      <td>750</td>
+      <td>280</td>
+      <td>31</td>
+      <td>10.0</td>
+      <td>0.5</td>
+      <td>155</td>
+      <td>1940</td>
+      <td>62</td>
+      <td>2</td>
+      <td>18</td>
+      <td>55</td>
+      <td>6.0</td>
+      <td>25.0</td>
+      <td>20.0</td>
+      <td>20.0</td>
+      <td>sandwich</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Crispy Bacon Smokehouse Chicken Sandwich</td>
+      <td>920</td>
+      <td>410</td>
+      <td>45</td>
+      <td>12.0</td>
+      <td>0.5</td>
+      <td>120</td>
+      <td>1980</td>
+      <td>81</td>
+      <td>4</td>
+      <td>18</td>
+      <td>46</td>
+      <td>6.0</td>
+      <td>20.0</td>
+      <td>20.0</td>
+      <td>20.0</td>
+      <td>sandwich</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -12452,7 +12634,7 @@ score: 0.0367226383386
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="k">import</span> <span class="n">DecisionTreeClassifier</span>
@@ -12460,12 +12642,12 @@ score: 0.0367226383386
 <span class="n">nutr_df</span><span class="o">=</span><span class="n">nutr_df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
 
 <span class="n">tree</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">()</span>
-<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">nutr_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Food&#39;</span><span class="p">,</span><span class="s1">&#39;category&#39;</span><span class="p">]))</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">nutr_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Food&#39;</span><span class="p">,</span><span class="s1">&#39;category&#39;</span><span class="p">,</span><span class="s1">&#39;cat_int&#39;</span><span class="p">]))</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">nutr_df</span><span class="p">[[</span><span class="s1">&#39;category&#39;</span><span class="p">]])</span>
 <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">tree</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span><span class="n">y_train</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Decision Tree (Classification) accuracy: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span><span class="n">y_test</span><span class="p">)))</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">nutr_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Food&#39;</span><span class="p">,</span><span class="s1">&#39;category&#39;</span><span class="p">]),</span><span class="n">tree</span><span class="o">.</span><span class="n">feature_importances_</span><span class="p">))))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">nutr_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Food&#39;</span><span class="p">,</span><span class="s1">&#39;category&#39;</span><span class="p">,</span><span class="s1">&#39;cat_int&#39;</span><span class="p">]),</span><span class="n">tree</span><span class="o">.</span><span class="n">feature_importances_</span><span class="p">))))</span>
 </pre></div>
 
 </div>
@@ -12482,23 +12664,23 @@ score: 0.0367226383386
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Decision Tree (Classification) accuracy: 0.807692307692
+<pre>Decision Tree (Classification) accuracy: 0.794871794872
                     0         1
-0            calories  0.044420
-1   calories_from_fat  0.000000
-2           tot_fat_g  0.000000
-3           sat_fat_g  0.132769
+0            calories  0.012511
+1   calories_from_fat  0.007065
+2           tot_fat_g  0.057340
+3           sat_fat_g  0.162101
 4         trans_fat_g  0.000000
-5      cholesterol_mg  0.093422
-6           sodium_mg  0.088707
-7             carbs_g  0.089450
+5      cholesterol_mg  0.052914
+6           sodium_mg  0.066028
+7             carbs_g  0.064544
 8             fiber_g  0.057979
-9             sugar_g  0.107359
-10          protein_g  0.114981
-11           vitA_pdv  0.004823
-12           vitC_pdv  0.033465
-13        calcium_pdv  0.084518
-14           iron_pdv  0.148107
+9             sugar_g  0.155436
+10          protein_g  0.101976
+11           vitA_pdv  0.052670
+12           vitC_pdv  0.000000
+13        calcium_pdv  0.041836
+14           iron_pdv  0.167598
 </pre>
 </div>
 </div>
@@ -12519,14 +12701,14 @@ score: 0.0367226383386
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="k">import</span> <span class="n">RandomForestClassifier</span>
 <span class="n">forest</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">()</span>
 <span class="n">forest</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span><span class="n">y_train</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Random Forest (Classification) accuracy: &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">forest</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span><span class="n">y_test</span><span class="p">)))</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">nutr_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Food&#39;</span><span class="p">,</span><span class="s1">&#39;category&#39;</span><span class="p">]),</span><span class="n">forest</span><span class="o">.</span><span class="n">feature_importances_</span><span class="p">))))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">nutr_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Food&#39;</span><span class="p">,</span><span class="s1">&#39;category&#39;</span><span class="p">,</span><span class="s1">&#39;cat_int&#39;</span><span class="p">]),</span><span class="n">forest</span><span class="o">.</span><span class="n">feature_importances_</span><span class="p">))))</span>
 </pre></div>
 
 </div>
@@ -12543,23 +12725,23 @@ score: 0.0367226383386
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Random Forest (Classification) accuracy: 0.858974358974
+<pre>Random Forest (Classification) accuracy: 0.846153846154
                     0         1
-0            calories  0.065916
-1   calories_from_fat  0.060139
-2           tot_fat_g  0.054203
-3           sat_fat_g  0.055362
-4         trans_fat_g  0.014392
-5      cholesterol_mg  0.071459
-6           sodium_mg  0.110696
-7             carbs_g  0.052622
-8             fiber_g  0.074822
-9             sugar_g  0.124073
-10          protein_g  0.103061
-11           vitA_pdv  0.042527
-12           vitC_pdv  0.036556
-13        calcium_pdv  0.068135
-14           iron_pdv  0.066036
+0            calories  0.060625
+1   calories_from_fat  0.059830
+2           tot_fat_g  0.051541
+3           sat_fat_g  0.059555
+4         trans_fat_g  0.000000
+5      cholesterol_mg  0.096829
+6           sodium_mg  0.113592
+7             carbs_g  0.096192
+8             fiber_g  0.077137
+9             sugar_g  0.081794
+10          protein_g  0.091201
+11           vitA_pdv  0.046634
+12           vitC_pdv  0.039787
+13        calcium_pdv  0.054960
+14           iron_pdv  0.070322
 </pre>
 </div>
 </div>
@@ -12580,7 +12762,7 @@ score: 0.0367226383386
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="k">import</span> <span class="n">DecisionTreeRegressor</span>
@@ -12607,21 +12789,22 @@ score: 0.0367226383386
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Decision Tree (Regression) Accuracy: 0.79115140498
+<pre>Decision Tree (Regression) Accuracy: 0.923749963272
                  0         1
-0        tot_fat_g  0.809913
-1        sat_fat_g  0.010382
-2      trans_fat_g  0.001545
-3   cholesterol_mg  0.001133
-4        sodium_mg  0.000299
-5          carbs_g  0.074523
-6          fiber_g  0.000375
-7          sugar_g  0.023952
-8        protein_g  0.061107
-9         vitA_pdv  0.002726
-10        vitC_pdv  0.012163
-11     calcium_pdv  0.001404
-12        iron_pdv  0.000477
+0        tot_fat_g  0.823231
+1        sat_fat_g  0.010250
+2      trans_fat_g  0.000000
+3   cholesterol_mg  0.002763
+4        sodium_mg  0.000521
+5          carbs_g  0.073802
+6          fiber_g  0.011193
+7          sugar_g  0.067237
+8        protein_g  0.007530
+9         vitA_pdv  0.000130
+10        vitC_pdv  0.001630
+11     calcium_pdv  0.000984
+12        iron_pdv  0.000486
+13         cat_int  0.000242
 </pre>
 </div>
 </div>
@@ -12632,7 +12815,7 @@ score: 0.0367226383386
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="k">import</span> <span class="n">RandomForestRegressor</span>
@@ -12656,21 +12839,22 @@ score: 0.0367226383386
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Random Forest (Regression) Accuracy: 0.956225800389
+<pre>Random Forest (Regression) Accuracy: 0.974716193382
                  0         1
-0        tot_fat_g  0.666213
-1        sat_fat_g  0.008125
-2      trans_fat_g  0.000419
-3   cholesterol_mg  0.015424
-4        sodium_mg  0.105472
-5          carbs_g  0.101394
-6          fiber_g  0.002424
-7          sugar_g  0.015595
-8        protein_g  0.071725
-9         vitA_pdv  0.000558
-10        vitC_pdv  0.000720
-11     calcium_pdv  0.005241
-12        iron_pdv  0.006692
+0        tot_fat_g  0.614017
+1        sat_fat_g  0.002920
+2      trans_fat_g  0.000102
+3   cholesterol_mg  0.081516
+4        sodium_mg  0.128657
+5          carbs_g  0.089782
+6          fiber_g  0.003544
+7          sugar_g  0.017245
+8        protein_g  0.048145
+9         vitA_pdv  0.001398
+10        vitC_pdv  0.003357
+11     calcium_pdv  0.005844
+12        iron_pdv  0.002379
+13         cat_int  0.001092
 </pre>
 </div>
 </div>
@@ -12683,7 +12867,338 @@ score: 0.0367226383386
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Again we can see that the Random Forest gives us the edge in accuracy. This comes at the cost of being slower to calculate, but on a small dataset like this the amount is negligible.</p>
+<p>Again we can see that the Random Forest gives us the edge in accuracy. This comes at the cost of being slower to calculate, but on a small dataset like this the amount is negligible. Now let's try this on the information we have available from a menu that we have in our dataset--Food name, calories, and category.</p>
+<p>We are going to take a simpified approach to recognizing the words of the Food name. You could employ Natural Language Processing to determine the meaning of different words and how those meanings match up with other information, but here we will be creating a series of dummy variables based on regular expressions that have been passed over the Food name strings.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">menu_df</span> <span class="o">=</span> <span class="n">nutr_df</span><span class="p">[[</span><span class="s1">&#39;Food&#39;</span><span class="p">,</span><span class="s1">&#39;calories&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">,</span><span class="s1">&#39;cat_int&#39;</span><span class="p">]]</span>
+<span class="n">menu_df</span><span class="p">[</span><span class="s1">&#39;chicken&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">menu_df</span><span class="p">[</span><span class="s1">&#39;Food&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;[cC]hicken&#39;</span><span class="p">,</span><span class="n">regex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">menu_df</span><span class="p">[</span><span class="s1">&#39;burger&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">menu_df</span><span class="p">[</span><span class="s1">&#39;Food&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;[bB]urger&#39;</span><span class="p">,</span><span class="n">regex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">menu_df</span><span class="p">[</span><span class="s1">&#39;milkshake&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">menu_df</span><span class="p">[</span><span class="s1">&#39;Food&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;milkshake&#39;</span><span class="p">,</span><span class="n">regex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">menu_df</span><span class="p">[</span><span class="s1">&#39;grilled&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">menu_df</span><span class="p">[</span><span class="s1">&#39;Food&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;[gG]rilled&#39;</span><span class="p">,</span><span class="n">regex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">menu_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[10]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Food</th>
+      <th>calories</th>
+      <th>category</th>
+      <th>cat_int</th>
+      <th>chicken</th>
+      <th>burger</th>
+      <th>milkshake</th>
+      <th>grilled</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Artisan Grilled Chicken Sandwich</td>
+      <td>380</td>
+      <td>sandwich</td>
+      <td>0</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Single Bacon Smokehouse Burger</td>
+      <td>840</td>
+      <td>sandwich</td>
+      <td>0</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Double Bacon Smokehouse Burger</td>
+      <td>1130</td>
+      <td>sandwich</td>
+      <td>0</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Grilled Bacon Smokehouse Chicken Sandwich</td>
+      <td>750</td>
+      <td>sandwich</td>
+      <td>0</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Crispy Bacon Smokehouse Chicken Sandwich</td>
+      <td>920</td>
+      <td>sandwich</td>
+      <td>0</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The above DataFrame, menu_df, now contains this information for every item. Now we will see if we can use this information to guess total_fat, saturated fat, and sugar using a Random Forest like we did before.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tree</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">()</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">menu_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Food&#39;</span><span class="p">,</span><span class="s1">&#39;category&#39;</span><span class="p">]))</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">nutr_df</span><span class="p">[[</span><span class="s1">&#39;tot_fat_g&#39;</span><span class="p">]])</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">tree</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span><span class="n">y_train</span><span class="p">)</span>
+<span class="n">tree</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span><span class="n">y_train</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Random Forest (Regression) Accuracy in guess total fat(g): &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span><span class="n">y_test</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">menu_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Food&#39;</span><span class="p">,</span><span class="s1">&#39;category&#39;</span><span class="p">]),</span><span class="n">tree</span><span class="o">.</span><span class="n">feature_importances_</span><span class="p">))))</span>
+
+<span class="n">tree</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">()</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">menu_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Food&#39;</span><span class="p">,</span><span class="s1">&#39;category&#39;</span><span class="p">]))</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">nutr_df</span><span class="p">[[</span><span class="s1">&#39;sat_fat_g&#39;</span><span class="p">]])</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">tree</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span><span class="n">y_train</span><span class="p">)</span>
+<span class="n">tree</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span><span class="n">y_train</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Random Forest (Regression) Accuracy in estimating saturated fat(g): &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span><span class="n">y_test</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">menu_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Food&#39;</span><span class="p">,</span><span class="s1">&#39;category&#39;</span><span class="p">]),</span><span class="n">tree</span><span class="o">.</span><span class="n">feature_importances_</span><span class="p">))))</span>
+
+<span class="n">tree</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">()</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">menu_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Food&#39;</span><span class="p">,</span><span class="s1">&#39;category&#39;</span><span class="p">]))</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">nutr_df</span><span class="p">[[</span><span class="s1">&#39;sugar_g&#39;</span><span class="p">]])</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">tree</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span><span class="n">y_train</span><span class="p">)</span>
+<span class="n">tree</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span><span class="n">y_train</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Random Forest (Regression) Accuracy in estimating sugar(g): &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span><span class="n">y_test</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">menu_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Food&#39;</span><span class="p">,</span><span class="s1">&#39;category&#39;</span><span class="p">]),</span><span class="n">tree</span><span class="o">.</span><span class="n">feature_importances_</span><span class="p">))))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Random Forest (Regression) Accuracy in guess total fat(g): 0.883957764443
+           0         1
+0   calories  0.960709
+1    cat_int  0.028988
+2    chicken  0.004013
+3     burger  0.001327
+4  milkshake  0.004411
+5    grilled  0.000552
+Random Forest (Regression) Accuracy in estimating saturated fat(g): 0.825330631654
+           0         1
+0   calories  0.847191
+1    cat_int  0.110129
+2    chicken  0.034441
+3     burger  0.005265
+4  milkshake  0.002000
+5    grilled  0.000975
+Random Forest (Regression) Accuracy in estimating sugar(g): 0.833143517778
+           0         1
+0   calories  0.493556
+1    cat_int  0.284558
+2    chicken  0.116248
+3     burger  0.005738
+4  milkshake  0.099856
+5    grilled  0.000043
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>They all seem to provide relatively descent estimates. They appear to rely most on calories and category (cat_int). This makes sense because the category helps determine the expected amounts of different nutrients like we saw with sugar earlier, and calories helps to predict the amount specifically. Let's try one more, fiber, whose regression model had a fairly low score.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tree</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">()</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">menu_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Food&#39;</span><span class="p">,</span><span class="s1">&#39;category&#39;</span><span class="p">]))</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">nutr_df</span><span class="p">[[</span><span class="s1">&#39;fiber_g&#39;</span><span class="p">]])</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">tree</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span><span class="n">y_train</span><span class="p">)</span>
+<span class="n">tree</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span><span class="n">y_train</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Random Forest (Regression) Accuracy in estimating fiber(g): &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span><span class="n">y_test</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">menu_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Food&#39;</span><span class="p">,</span><span class="s1">&#39;category&#39;</span><span class="p">]),</span><span class="n">tree</span><span class="o">.</span><span class="n">feature_importances_</span><span class="p">))))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Random Forest (Regression) Accuracy in estimating fiber(g): 0.673475698402
+           0         1
+0   calories  0.532446
+1    cat_int  0.304017
+2    chicken  0.136188
+3     burger  0.001646
+4  milkshake  0.020975
+5    grilled  0.004727
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This is much less accurate than the other models, but let's see if we can improve it being adding another word variable.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">menu_df</span><span class="p">[</span><span class="s1">&#39;salad&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">menu_df</span><span class="p">[</span><span class="s1">&#39;Food&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;[sS]alad&#39;</span><span class="p">,</span><span class="n">regex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">tree</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">()</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">menu_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Food&#39;</span><span class="p">,</span><span class="s1">&#39;category&#39;</span><span class="p">]))</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">nutr_df</span><span class="p">[[</span><span class="s1">&#39;fiber_g&#39;</span><span class="p">]])</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">tree</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span><span class="n">y_train</span><span class="p">)</span>
+<span class="n">tree</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span><span class="n">y_train</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Random Forest (Regression) Accuracy in estimating fiber(g): &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span><span class="n">y_test</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">menu_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Food&#39;</span><span class="p">,</span><span class="s1">&#39;category&#39;</span><span class="p">]),</span><span class="n">tree</span><span class="o">.</span><span class="n">feature_importances_</span><span class="p">))))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Random Forest (Regression) Accuracy in estimating fiber(g): 0.573788306818
+           0         1
+0   calories  0.598737
+1    cat_int  0.284771
+2    chicken  0.029932
+3     burger  0.001164
+4  milkshake  0.044778
+5    grilled  0.004741
+6      salad  0.035876
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>That change looks like it might have helped improve accuracy some, but given the limited number of items in the dataset containing the word "salad" it's not surprising this didn't have a strong effect. To be able to predict things more accuratley we would dive deeper into Machine Learning, potentially using <a href="https://skymind.ai/wiki/neural-network">Neural Networks</a> and <a href="https://towardsdatascience.com/introduction-to-nlp-5bff2b2a7170">Natural Language Processing</a> to further assess the impact different words seem to have on nutritional content.</p>
 
 </div>
 </div>
@@ -12692,7 +13207,16 @@ score: 0.0367226383386
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Documentation for Packages Used</p>
+<p>Now you know how to scrape data, organize and clean it (although this will be a unique process for every data set), visualize it, use linear regression to make linear estimations, and create Decision Trees and Random Forests to let machine learning find those relationships for you. There is still a vast amount to learn about Data Science and Machine Learning. I especially recomend you check out <a href="https://scikit-learn.org/stable/tutorial/machine_learning_map/index.html">this</a> diagram from sklearn to see the options provided by just one module.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Documentation for Modules and Packages Used</p>
 <ol>
 <li><a href="http://docs.python-requests.org/en/master/">requests</a></li>
 <li><a href="https://pandas.pydata.org/">pandas</a></li>
@@ -12706,6 +13230,20 @@ score: 0.0367226383386
 <li><a href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html">RandomForestClassifier</a> from sklearn.ensemble</li>
 <li><a href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html">RandomForestRegressor</a> from sklearn.ensemble </li>
 </ol>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>More information about modules you might be interested in:</p>
+<ul>
+<li>Natural Language Processing: <a href="https://medium.com/activewizards-machine-learning-company/comparison-of-top-6-python-nlp-libraries-c4ce160237eb">article</a>, <a href="https://www.tensorflow.org/">TensorFlow</a></li>
+<li>Data Visualization: <a href="https://ggplot2.tidyverse.org/index.html">ggplot</a>, <a href="https://seaborn.pydata.org/">seaborn</a>, and many many more.</li>
+</ul>
+<p>If there is another topic you are especially interested in I encourage you to hop on your favorite search engine and find out what is out there for you to explore.    --Erin Nordquist</p>
 
 </div>
 </div>
